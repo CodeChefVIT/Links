@@ -1,21 +1,21 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const userSchema = Schema({
-    username: {
+const linkSchema = Schema({
+    name: {
         type: String,
         required: true,
-        min: 6,
-        max: 15
     },
-    password: {
+    redirectTo: {
         type: String,
         required: true,
-        min: 6,
-        max: 1024
+    },
+    clicks: {
+        type: String,
+        required: true,
     }
 }, { timestamps: true });
 
-const User = mongoose.model('User', userSchema);
+const Links = mongoose.model('Links', linkSchema);
 
-module.exports = User;
+module.exports = Links;
