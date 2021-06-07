@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const path = require('path');
 const dotenv = require('dotenv');
 const User = require('./Backend/models/user');
 const Link = require('./Backend/models/link');
@@ -24,29 +25,115 @@ mongoose.connect(uri, {
     })
     .catch(error => console.error(error.message));
 
+app.use((req, res, next) => {
+    console.log('new request made');
+    console.log('host: ', req.hostname);
+    console.log('path: ', req.path);
+    console.log('method :', req.method);
+    next();
+});
+
+//Static files
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static('Frontend'));
+
 const user = new User({
     username: 'codechef-admin',
     password: '1234',
 });
 
 const link = new Link({
-    name: 'GitHub',
-    redirectTo: 'https://github.com/whoisaditya',
-    clicks: '10'
+    name: 'abc2',
+    redirectTo: 'xyz2.com',
+    clicks: '0'
 });
 
 // Main Page
 app.get('/', (req, res) => {
-    res.sendFile('./Frontend/index.html');
+    const index = path.join(__dirname, '/Frontend', 'index.html');
+    res.sendFile(index);
 });
+
+// All links
+app.get('/allLinks', (req, res) => {
+    Link.find()
+        .then((result) => {
+            res.send(result);
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+});
+
 
 // Login Page
 app.get('/login', (req, res) => {
-    res.sendFile('./Frontend/login.html');
+    // user.save()
+    //     .then((result) => {
+    //         res.send(result)
+    //     })
+    //     .catch((err) => {
+    //         console.log(err);
+    //     });
+    const index = path.join(__dirname, '/Frontend', 'login.html');
+    res.sendFile(index);
 });
 
 // Admin Page
 app.get('/admin', (req, res) => {
-    res.sendFile('./Frontend/admin.html');
+    const index = path.join(__dirname, './Frontend', 'admin.html');
+    // link.save()
+    //     .then((result) => {
+    //         res.send(result)
+    //     })
+    //     .catch((err) => {
+    //         console.log(err);
+    //     });
+    res.sendFile(index);
 });
+
+app.post('/admin', (res, req) => {
+    const link = new Link({
+        name: 'abc3',
+        redirectTo: 'xyz3.com',
+        clicks: '0'
+    });
+
+    link.save()
+        .then(result => {
+            res.json({ redirect: '/admin' })
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+
+})
+
+app.put('/admin/:id', (req, res) => {
+    const id = req.params.id;
+
+    Link.findByIdAndUpdate(id, {
+        name: 'abc4',
+        redirectTo: 'xyz4.com',
+    })
+        .then(result => {
+            res.json({ redirect: '/admin' })
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+})
+
+app.delete('/admin/:id', (req, res) => {
+    const id = req.params.id;
+
+    Link.findByIdAndDelete(id)
+        .then(result => {
+            res.json({ redirect: '/admin' })
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+})
+
 

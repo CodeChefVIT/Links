@@ -11,11 +11,12 @@ const linkSchema = Schema({
         required: true,
     },
     clicks: {
-        type: String,
+        type: Number,
+        default: 0,
         required: true,
     }
 }, { timestamps: true });
 
-const Links = mongoose.model('Links', linkSchema);
+const Link = mongoose.model('Link', linkSchema);
 
-module.exports = Links;
+module.exports = Link;
