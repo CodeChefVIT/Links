@@ -112,7 +112,10 @@ app.post('/admin', (res, req) => {
 app.put('/admin/:id', (req, res) => {
     const id = req.params.id;
 
-    Link.findByIdAndUpdate(id)
+    Link.findByIdAndUpdate(id, {
+        name: 'abc4',
+        redirectTo: 'xyz4.com',
+    })
         .then(result => {
             res.json({ redirect: '/admin' })
         })
