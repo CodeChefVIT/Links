@@ -54,6 +54,26 @@ app.get('/', (req, res) => {
     res.sendFile(index);
 });
 
+app.put('/updateCount/:id', (req, res) => {
+    //const link = req.body.link;
+    const id = req.params.id;
+
+    Link.updateOne({ _id: id }, {
+        name: 'abc4',
+        redirectTo: 'xyz4.com',
+    })
+        // Link.findByIdAndUpdate(id, {
+        //     name: 'abc4',
+        //     redirectTo: 'xyz4.com',
+        // })
+        .then(result => {
+            res.json({ redirect: '/admin' })
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+})
+
 // All links
 app.get('/allLinks', (req, res) => {
     Link.find()
@@ -92,16 +112,20 @@ app.get('/admin', (req, res) => {
     res.sendFile(index);
 });
 
-app.post('/admin', (res, req) => {
+app.post('/admin', (req, res) => {
+    //const link = req.body.link;
+
+    //console.log(req.body);
+
     const link = new Link({
-        name: 'abc3',
+        name: 'abc13',
         redirectTo: 'xyz3.com',
         clicks: '0'
     });
 
     link.save()
         .then(result => {
-            res.json({ redirect: '/admin' })
+            res.redirect('/admin');
         })
         .catch((err) => {
             console.log(err);
@@ -110,8 +134,14 @@ app.post('/admin', (res, req) => {
 })
 
 app.put('/admin/:id', (req, res) => {
+
+    //const link = req.body.link;
     const id = req.params.id;
 
+    Link.updateOne({ _id: id }, {
+        name: 'abc4',
+        redirectTo: 'xyz4.com',
+    })
     Link.findByIdAndUpdate(id, {
         name: 'abc4',
         redirectTo: 'xyz4.com',
