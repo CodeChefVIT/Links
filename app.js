@@ -25,6 +25,9 @@ mongoose.connect(uri, {
     })
     .catch(error => console.error(error.message));
 
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
 app.use((req, res, next) => {
     console.log('new request made');
     console.log('host: ', req.hostname);
@@ -54,20 +57,14 @@ app.get('/', (req, res) => {
     res.sendFile(index);
 });
 
+// For Updating No of Clicks
 app.put('/updateCount/:id', (req, res) => {
     //const link = req.body.link;
     const id = req.params.id;
 
-    Link.updateOne({ _id: id }, {
-        name: 'abc4',
-        redirectTo: 'xyz4.com',
-    })
-        // Link.findByIdAndUpdate(id, {
-        //     name: 'abc4',
-        //     redirectTo: 'xyz4.com',
-        // })
+    Link.updateOne({ _id: id }, { $inc: { clicks: 1 } })
         .then(result => {
-            res.json({ redirect: '/admin' })
+            res.status(200).send(result);
         })
         .catch((err) => {
             console.log(err);
@@ -78,7 +75,7 @@ app.put('/updateCount/:id', (req, res) => {
 app.get('/allLinks', (req, res) => {
     Link.find()
         .then((result) => {
-            res.send(result);
+            res.status(200).send(result);
         })
         .catch((err) => {
             console.log(err);
@@ -88,13 +85,6 @@ app.get('/allLinks', (req, res) => {
 
 // Login Page
 app.get('/login', (req, res) => {
-    // user.save()
-    //     .then((result) => {
-    //         res.send(result)
-    //     })
-    //     .catch((err) => {
-    //         console.log(err);
-    //     });
     const index = path.join(__dirname, '/Frontend', 'login.html');
     res.sendFile(index);
 });
@@ -102,13 +92,6 @@ app.get('/login', (req, res) => {
 // Admin Page
 app.get('/admin', (req, res) => {
     const index = path.join(__dirname, './Frontend', 'admin.html');
-    // link.save()
-    //     .then((result) => {
-    //         res.send(result)
-    //     })
-    //     .catch((err) => {
-    //         console.log(err);
-    //     });
     res.sendFile(index);
 });
 
@@ -118,14 +101,14 @@ app.post('/admin', (req, res) => {
     //console.log(req.body);
 
     const link = new Link({
-        name: 'abc13',
+        name: 'abc25',
         redirectTo: 'xyz3.com',
         clicks: '0'
     });
 
     link.save()
         .then(result => {
-            res.redirect('/admin');
+            res.status(200).send(result);
         })
         .catch((err) => {
             console.log(err);
@@ -142,12 +125,8 @@ app.put('/admin/:id', (req, res) => {
         name: 'abc4',
         redirectTo: 'xyz4.com',
     })
-    Link.findByIdAndUpdate(id, {
-        name: 'abc4',
-        redirectTo: 'xyz4.com',
-    })
         .then(result => {
-            res.json({ redirect: '/admin' })
+            res.status(200).send(result);
         })
         .catch((err) => {
             console.log(err);
@@ -159,11 +138,11 @@ app.delete('/admin/:id', (req, res) => {
 
     Link.findByIdAndDelete(id)
         .then(result => {
-            res.json({ redirect: '/admin' })
+            //console.log('yup');
+            res.status(200).send(result);
+
         })
         .catch((err) => {
             console.log(err);
         });
 })
-
-
