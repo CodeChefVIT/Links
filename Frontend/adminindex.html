@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+  
+  <meta name="theme-color" content="#101D42" />
+  <meta property="og:locale" content="en, pt-br" />
+  <meta property="og:site_name" content="Maganez" />
+  
+  
+  <link
+    rel="shortcut icon"
+    href="https://maganezf-me.vercel.app/favicon.svg"
+    title="favicon"
+  />
+  
+  
+  <link rel="stylesheet" href="styles.css" />
+  
+  <title>Codechef</title>
+</head>
+
+<body>
+  <div id="particles-js"></div>
+  
+  <div class="container">
+    <img
+    class="profile-picture"
+    src="bg.png"
+    loading="lazy"
+    />
+    <button class="abc">
+      Login
+    </button>
+    
+    <h2>Codechef</h2>
+    <p class="subtitle">A student technical chapter</p></br>
+    <p class="subtitle">
+      Keep connected with our work 👨‍💻
+    </p>
+
+    <div class="info-container">
+      <div class="content">
+        <h3>Main links below 👇🏼</h3>
+        
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="#"
+          class="link"
+        >
+          <ion-icon name="code-slash"></ion-icon>
+          My personal website
+        </a>
+
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="#"
+          class="link"
+        >
+          <ion-icon name="logo-github"></ion-icon>
+          My Github
+        </a>
+    
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="#"
+          class="link"
+        >
+          <ion-icon name="logo-linkedin"></ion-icon>
+          My LinkedIn
+        </a>
+    
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="#"
+          class="link"
+        >
+          <ion-icon name="mail"></ion-icon>
+          My Personal email
+        </a>
+
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="#r"
+          class="link"
+        >
+          <ion-icon name="mail"></ion-icon>
+          My Institutional email
+        </a>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+<script>
+  particlesJS("particles-js", {
+    particles: {
+      number: { value: 1200, density: { enable: true, value_area: 790 } },
+      color: { value: "#ffffff" },
+      shape: {
+        type: "circle",
+        stroke: { width: 0, color: "#000000" },
+        polygon: { nb_sides: 5 },
+        image: { src: "img/github.svg", width: 100, height: 100 },
+      },
+      opacity: {
+        value: 0.5,
+        random: false,
+        anim: { enable: true, speed: 0.2, opacity_min: 0, sync: false },
+      },
+      size: {
+        value: 2,
+        random: true,
+        anim: { enable: true, speed: 2, size_min: 0.3, sync: false },
+      },
+      line_linked: {
+        enable: false,
+        distance: 150,
+        color: "#ffffff",
+        opacity: 0.4,
+        width: 1,
+      },
+      move: {
+        enable: true,
+        speed: 1,
+        direction: "top-right",
+        random: true,
+        straight: false,
+        out_mode: "out",
+        bounce: false,
+        attract: { enable: false, rotateX: 600, rotateY: 600 },
+      },
+    },
+    interactivity: {
+      detect_on: "canvas",
+      events: {
+        onhover: { enable: true, mode: "bubble" },
+        onclick: { enable: true, mode: "push" },
+        resize: true,
+      },
+      modes: {
+        grab: { distance: 400, line_linked: { opacity: 1 } },
+        bubble: {
+          distance: 83.91608391608392,
+          size: 1,
+          duration: 3,
+          opacity: 1,
+          speed: 3,
+        },
+        repulse: { distance: 200, duration: 0.4 },
+        push: { particles_nb: 4 },
+        remove: { particles_nb: 2 },
+      },
+    },
+    retina_detect: true,
+  });
+</script>
+</html>
