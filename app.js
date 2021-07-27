@@ -5,11 +5,13 @@ const dotenv = require('dotenv');
 const User = require('./Backend/models/user');
 const Link = require('./Backend/models/link');
 
+
 dotenv.config();
+
+let refreshTokens = []
 
 //Express App
 const app = express();
-app.listen(3001);
 
 const uri = process.env.DB_URI;
 //console.log('Uri Defined', uri);
@@ -41,8 +43,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('Frontend'));
 
 const user = new User({
-    username: 'codechef-admin',
-    password: '1234',
+    username: process.env.ADMIN_USERNAME,
+    password: process.env.ADMIN_PASSWORD,
 });
 
 const link = new Link({
@@ -56,7 +58,7 @@ app.get('/', (req, res) => {
     const index = path.join(__dirname, '/Frontend', 'index.html');
     res.sendFile(index);
 });
-
+// User Related
 // For Updating No of Clicks
 app.put('/updateCount/:id', (req, res) => {
     //const link = req.body.link;
@@ -83,30 +85,24 @@ app.get('/allLinks', (req, res) => {
 });
 
 
-// Login Page
-app.get('/login', (req, res) => {
-    const index = path.join(__dirname, '/Frontend', 'login.html');
-    res.sendFile(index);
-});
+app.post('/admin',authenticateToken , (req, res) => {
+    const {name, redirectTo, clicks} = req.body;
 
-// Admin Page
-app.get('/admin', (req, res) => {
-    const index = path.join(__dirname, './Frontend', 'admin.html');
-    res.sendFile(index);
-});
-
-app.post('/admin', (req, res) => {
     //const link = req.body.link;
 
-    //console.log(req.body);
+    //console.log(req);
 
-    const link = new Link({
-        name: 'abc25',
-        redirectTo: 'xyz3.com',
-        clicks: '0'
-    });
+    console.log(req.body);
 
-    link.save()
+    const link1 = new Link({name, redirectTo, clicks});
+
+    // const link = new Link({
+    //     name: 'abc25',
+    //     redirectTo: 'xyz3.com',
+    //     clicks: '0'
+    // });
+
+    link1.save()
         .then(result => {
             res.status(200).send(result);
         })
@@ -116,7 +112,7 @@ app.post('/admin', (req, res) => {
 
 })
 
-app.put('/admin/:id', (req, res) => {
+app.put('/admin/:id', authenticateToken,(req, res) => {
 
     //const link = req.body.link;
     const id = req.params.id;
@@ -133,7 +129,7 @@ app.put('/admin/:id', (req, res) => {
         });
 })
 
-app.delete('/admin/:id', (req, res) => {
+app.delete('/admin/:id', authenticateToken ,(req, res) => {
     const id = req.params.id;
 
     Link.findByIdAndDelete(id)
@@ -146,3 +142,18 @@ app.delete('/admin/:id', (req, res) => {
             console.log(err);
         });
 })
+
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
+    if (token == null) return res.sendStatus(401)
+  
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+      console.log(err)
+      if (err) return res.sendStatus(403)
+      req.user = user
+      next()
+    })
+  }
+  
+  app.listen(3000)
