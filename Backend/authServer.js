@@ -28,7 +28,16 @@ app.post('/login', (req, res) => {
   // Authenticate User
 
   const username = req.body.name
-  const user = { name: username }
+  const user = {name: username}
+  const password = req.body.password
+  if(password != process.env.ADMIN_PASSWORD)
+  {
+    return res.status(402).json({
+      message: "Incorrect Passowrd"
+    })
+  }
+
+  //const user = { name: username }
 
   const accessToken = generateAccessToken(user)
   const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET)
@@ -37,7 +46,7 @@ app.post('/login', (req, res) => {
 })
 
 function generateAccessToken(user) {
-  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15s' })
+  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30d' })
 }
 
 app.listen(4000)

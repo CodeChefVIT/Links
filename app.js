@@ -1,17 +1,21 @@
 const express = require('express');
+const app = express();
+const bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 const mongoose = require('mongoose');
 const path = require('path');
 const dotenv = require('dotenv');
 const User = require('./Backend/models/user');
 const Link = require('./Backend/models/link');
-
+const jwt = require('jsonwebtoken')
 
 dotenv.config();
 
-let refreshTokens = []
 
 //Express App
-const app = express();
+
 
 const uri = process.env.DB_URI;
 //console.log('Uri Defined', uri);
@@ -45,12 +49,6 @@ app.use(express.static('Frontend'));
 const user = new User({
     username: process.env.ADMIN_USERNAME,
     password: process.env.ADMIN_PASSWORD,
-});
-
-const link = new Link({
-    name: 'abc2',
-    redirectTo: 'xyz2.com',
-    clicks: '0'
 });
 
 // Main Page
@@ -88,13 +86,12 @@ app.get('/allLinks', (req, res) => {
 app.post('/admin',authenticateToken , (req, res) => {
     const {name, redirectTo, clicks} = req.body;
 
-    //const link = req.body.link;
-
-    //console.log(req);
+    //const link = req.body;
 
     console.log(req.body);
 
     const link1 = new Link({name, redirectTo, clicks});
+    
 
     // const link = new Link({
     //     name: 'abc25',
