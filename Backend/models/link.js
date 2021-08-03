@@ -4,16 +4,19 @@ const Schema = mongoose.Schema;
 const linkSchema = Schema({
     name: {
         type: String,
-        required: true,
     },
     redirectTo: {
         type: String,
-        required: true,
     },
     clicks: {
         type: Number,
         default: 0,
-        required: true,
+    },
+    visiblity: {
+        type: Boolean,
+    },
+    index:{
+        type: Number,
     }
 }, { timestamps: true });
 

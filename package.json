@@ -1,18 +1,21 @@
 {
   "dependencies": {
+    "body-parser": "^1.19.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "mongoose": "^5.12.10",
     "morgan": "^1.10.0"
   },
-  "name": "links",
+  "name": "y",
   "description": "<p align=\"center\"><a href=\"https://www.codechefvit.com\" target=\"_blank\"><img src=\"https://s3.amazonaws.com/codechef_shared/sites/all/themes/abessive/logo-3.png\" title=\"CodeChef-VIT\" alt=\"Codechef-VIT\"></a>\r </p>",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon app.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "devStartAuth": "nodemon authServer"
   },
   "repository": {
     "type": "git",
@@ -23,5 +26,8 @@
   "bugs": {
     "url": "https://github.com/whoisaditya/Links/issues"
   },
-  "homepage": "https://github.com/whoisaditya/Links#readme"
+  "homepage": "https://github.com/whoisaditya/Links#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  }
 }
