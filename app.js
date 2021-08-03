@@ -1,9 +1,12 @@
 const express = require('express');
 const app = express();
 const bodyParser = require("body-parser");
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+app.use(express.json())
+
 const mongoose = require('mongoose');
 const path = require('path');
 const dotenv = require('dotenv');
@@ -13,12 +16,7 @@ const jwt = require('jsonwebtoken')
 
 dotenv.config();
 
-
-//Express App
-
-
 const uri = process.env.DB_URI;
-//console.log('Uri Defined', uri);
 
 mongoose.connect(uri, {
     useNewUrlParser: true,
@@ -51,11 +49,6 @@ const user = new User({
     password: process.env.ADMIN_PASSWORD,
 });
 
-// Main Page
-app.get('/', (req, res) => {
-    const index = path.join(__dirname, '/Frontend', 'index.html');
-    res.sendFile(index);
-});
 // User Related
 // For Updating No of Clicks
 app.put('/updateCount/:id', (req, res) => {
@@ -84,20 +77,10 @@ app.get('/allLinks', (req, res) => {
 
 
 app.post('/admin',authenticateToken , (req, res) => {
+
     const {name, redirectTo, clicks} = req.body;
-
-    //const link = req.body;
-
     console.log(req.body);
-
     const link1 = new Link({name, redirectTo, clicks});
-    
-
-    // const link = new Link({
-    //     name: 'abc25',
-    //     redirectTo: 'xyz3.com',
-    //     clicks: '0'
-    // });
 
     link1.save()
         .then(result => {
@@ -114,10 +97,11 @@ app.put('/admin/:id', authenticateToken,(req, res) => {
     //const link = req.body.link;
     const id = req.params.id;
 
-    Link.updateOne({ _id: id }, {
-        name: 'abc4',
-        redirectTo: 'xyz4.com',
-    })
+    const {name, redirectTo, clicks} = req.body;
+    console.log(req.body);
+    const link1 = new Link({name, redirectTo, clicks});
+
+    Link.updateOne({ id: id }, link1)
         .then(result => {
             res.status(200).send(result);
         })
@@ -152,5 +136,46 @@ function authenticateToken(req, res, next) {
       next()
     })
   }
+
+let refreshTokens = []
+
+app.post('/token', (req, res) => {
+  const refreshToken = req.body.token
+  if (refreshToken == null) return res.sendStatus(401)
+  if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403)
+  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403)
+    const accessToken = generateAccessToken({ name: user.name })
+    res.json({ accessToken: accessToken })
+  })
+})
+
+app.delete('/logout', (req, res) => {
+  refreshTokens = refreshTokens.filter(token => token !== req.body.token)
+  res.sendStatus(204)
+})
+
+app.post('/login', (req, res) => {
+  // Authenticate User
+
+  const username = req.body.name
+  const user = {name: username}
+  const password = req.body.password
+  if(password != process.env.ADMIN_PASSWORD)
+  {
+    return res.status(402).json({
+      message: "Incorrect Passowrd"
+    })
+  }
+
+  const accessToken = generateAccessToken(user)
+  const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET)
+  refreshTokens.push(refreshToken)
+  res.json({ accessToken: accessToken, refreshToken: refreshToken })
+})
+
+function generateAccessToken(user) {
+  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30d' })
+}
   
-  app.listen(3000)
+app.listen(3000)
