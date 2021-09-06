@@ -10,8 +10,8 @@ app.use(express.json())
 const mongoose = require('mongoose');
 const path = require('path');
 const dotenv = require('dotenv');
-const User = require('./Backend/models/user');
-const Link = require('./Backend/models/link');
+const User = require('./api/models/user');
+const Link = require('./api/models/link');
 const jwt = require('jsonwebtoken')
 
 dotenv.config();
@@ -63,6 +63,9 @@ app.put('/updateCount/:id', (req, res) => {
             console.log(err);
         });
 })
+
+app.use("/user", require("./api/routers/user"));
+app.use("/admin", require("./api/routers/admin"));
 
 // All links
 app.get('/allLinks', (req, res) => {
