@@ -1,7 +1,7 @@
 const router = require("express").Router();
-
 const user = require("../controllers/user");
 
-app.get("/allLinks", allLinks);
+router.get("/allLinks", user.allLinks);
+router.put('/updateCount/:id', user.updateCount)
 
 module.exports = router;
