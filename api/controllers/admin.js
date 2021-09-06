@@ -1,7 +1,11 @@
 const User = require("../models/user");
 const Link = require("../models/link");
-const auth = require("../middlewear/auth");
-const jwt = require('jsonwebtoken')
+const auth = require("../middlewears/auth");
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+
+dotenv.config();
+
 
 exports.newLink = async (req, res) => {
   const { name, redirectTo, clicks } = req.body;
@@ -45,12 +49,19 @@ exports.deleteLink = async (req, res) => {
     });
 };
 
+let refreshTokens = [];
+
 exports.token = async (req, res) => {
+
   const refreshToken = req.body.token;
   if (refreshToken == null) return res.sendStatus(401);
+
   if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403);
+
   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+
     if (err) return res.sendStatus(403);
+
     const accessToken = generateAccessToken({ name: user.name });
     res.json({ accessToken: accessToken });
   });
@@ -73,7 +84,7 @@ exports.login = async  (req, res) => {
     });
   }
 
-  const accessToken = auth.generateAccessToken(user);
+  const accessToken = await auth.generateAccessToken(user);
   const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
   refreshTokens.push(refreshToken);
   res.json({ accessToken: accessToken, refreshToken: refreshToken });

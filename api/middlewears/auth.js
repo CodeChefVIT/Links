@@ -13,8 +13,6 @@ exports.authenticateToken = async (req, res, next) => {
   });
 };
 
-let refreshTokens = [];
-
 exports.generateAccessToken = async (user) => {
   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "30d" });
 };

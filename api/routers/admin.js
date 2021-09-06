@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const admin = require("../controllers/admin");
-const auth = require("../middlewear/auth");
+const auth = require("../middlewears/auth");
 
 router.post("/newLink", auth.authenticateToken, admin.newLink);
 router.post("/token", admin.token);
